@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('./partials/head') %>
+    <title>HomePage</title>
+    <style>
+      h1 {
+        color: #16404d;
+      }
+
+      /* Table Styling */
+      .table {
+        border-collapse: separate;
+        border-spacing: 0;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        background-color: white; /* Table background */
+      }
+
+      .table th {
+        background-color: #16404d; /* Dark Teal */
+        color: white;
+        text-align: center;
+        font-weight: bold;
+        padding: 10px;
+      }
+
+      .table td {
+        text-align: center;
+        padding: 10px;
+        vertical-align: middle;
+        color: #16404d; /* Dark Teal */
+      }
+
+      .table tbody tr:nth-child(even) {
+        background-color: rgb(251, 245, 221); /* Soft Beige */
+      }
+
+      .table tbody tr:nth-child(odd) {
+        background-color: rgb(166, 205, 198); /* Light Teal */
+      }
+
+      .table tbody tr:hover {
+        background-color: #dda853; /* Golden Beige */
+        color: white;
+      }
+
+      .table thead th:first-child,
+      .table tbody td:first-child {
+        border-radius: 10px 0 0 0;
+      }
+
+      .table thead th:last-child,
+      .table tbody td:last-child {
+        border-radius: 0 10px 0 0;
+      }
+      a {
+        color: #16404d; /* Dark Teal */
+        text-decoration: none;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <%- include('./partials/nav') %>
+
+    <div class="container mt-5">
+      <h1 class="text-center">URL Shortener</h1>
+
+      <% if (locals.id){ %>
+      <div class="alert alert-success text-center mt-4" role="alert">
+        URL Generated:
+        <a
+          href="http://localhost:8000/url/<%= id %>"
+          target="_blank"
+          class="alert-link"
+          >http://localhost:8000/url/<%= id %></a
+        >
+      </div>
+      <% } %>
+
+      <div class="mt-4">
+        <form method="POST" action="/url" class="p-4 rounded border">
+          <div class="mb-3">
+            <label for="url" class="form-label">Enter Your Original URL</label>
+            <input
+              type="text"
+              id="url"
+              name="url"
+              class="form-control"
+              placeholder="https://example.com"
+              required
+            />
+          </div>
+          <button type="submit" class="btn btn-primary">
+            Generate Short URL
+          </button>
+        </form>
+      </div>
+
+      <div class="mt-4">
+        <% if (locals.urls && locals.urls.length > 0) { %>
+        <table class="table table-striped table-bordered">
+          <thead class="table-dark text-white">
+            <tr>
+              <th>S.No.</th>
+              <th>Short ID</th>
+              <th>Redirect</th>
+              <th>Clicks</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% urls.forEach((url, index) => { %>
+            <tr>
+              <td><%= index + 1 %></td>
+              <td><%= url.shortId %></td>
+              <td>
+                <a href="<%= url.redirectURL %>" target="_blank"
+                  ><%= url.redirectURL %></a
+                >
+              </td>
+              <td><%= url.visitHistory.length %></td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+        <% } else { %>
+        <div class="alert alert-info text-center mt-4" role="alert">
+          No URLs have been generated yet. Start by creating one above!
+        </div>
+        <% } %>
+      </div>
+    </div>
+
+    <%- include('./partials/footer') %>
+
+    <!-- Including Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <%- include('./partials/script') %>
+  </body>
+</html>
